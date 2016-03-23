@@ -25,6 +25,12 @@ Once you have finished adding your content then your book is ready to use. To co
 
 Once you have a working book then you can play with the values in the Page Turn Options to see how they effect the page turn animation. See below for a description of all the params in the system and what they do.
 
+v1.35
+Fixed an exception that could happen if your book has less physical pages than the number of content pages defined and the edit page value is linked to the page value.
+
+v1.34
+Fixed error for depreciated castShadows method.
+
 v1.33
 Added option to define whether pages cast shadows.
 Added option to define whether pages receive shadows.

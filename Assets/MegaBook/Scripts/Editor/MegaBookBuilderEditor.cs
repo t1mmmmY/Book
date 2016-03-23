@@ -980,6 +980,8 @@ public class MegaBookBuilderEditor : Editor
 	void OnSceneGUI()
 	{
 		MegaBookBuilder mod = (MegaBookBuilder)target;
+		if ( mod.editpage >= mod.pages.Count )
+			return;
 		MegaBookPage pg = mod.pages[mod.editpage];
 
 		switch ( Tools.current )

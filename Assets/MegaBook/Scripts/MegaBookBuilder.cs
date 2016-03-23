@@ -714,7 +714,7 @@ public class MegaBookBuilder : MonoBehaviour
 		}
 	}
 
-	GameObject MakePageObject(MegaBookPage page, int pnum)	//, Material mat)
+	public GameObject MakePageObject(MegaBookPage page, int pnum)	//, Material mat)
 	{
 		GameObject cobj = new GameObject();
 		cobj.name = "Page";
@@ -911,7 +911,7 @@ public class MegaBookBuilder : MonoBehaviour
 
 				Material[] mats;
 
-				if ( dynamobj && dynammeshenabled && dynamobj.isActiveAndEnabled)
+				if ( dynamobj && dynammeshenabled )
 				{
 					int nmb = dynamobj.GetNumMaterials(page.pnum, false);
 
@@ -1269,7 +1269,7 @@ public class MegaBookBuilder : MonoBehaviour
 		}
 
 		// Textbuilder
-		if ( dynamobj && dynammeshenabled && dynamobj.isActiveAndEnabled)
+		if ( dynamobj && dynammeshenabled )
 		{
 			Vector3 losscl = transform.lossyScale;
 
@@ -1342,7 +1342,7 @@ public class MegaBookBuilder : MonoBehaviour
 
 		mesh.Clear();
 
-		if ( dynamobj && dynammeshenabled && dynamobj.isActiveAndEnabled)
+		if ( dynamobj && dynammeshenabled )
 			mesh.subMeshCount = 3 + dynamobj.GetNumMaterials(page.pnum, true) + dynamobj.GetNumMaterials(page.pnum, false);
 		else
 			mesh.subMeshCount = 3;
@@ -1356,7 +1356,7 @@ public class MegaBookBuilder : MonoBehaviour
 		mesh.SetTriangles(tris1.ToArray(), 1);
 		mesh.SetTriangles(tris2.ToArray(), 2);
 
-		if ( dynamobj && dynammeshenabled && dynamobj.isActiveAndEnabled)
+		if ( dynamobj && dynammeshenabled )
 		{
 			int mo = dynamobj.GetNumMaterials(page.pnum, true);
 			int ix = 0;

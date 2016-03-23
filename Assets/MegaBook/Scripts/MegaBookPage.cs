@@ -243,7 +243,7 @@ public class MegaBookPage
 		}
 	}
 
-	void UpdateAttached(MegaBookPageObject pobj, float flip)
+	public void UpdateAttached(MegaBookPageObject pobj, float flip)
 	{
 		GameObject target = pobj.obj;
 

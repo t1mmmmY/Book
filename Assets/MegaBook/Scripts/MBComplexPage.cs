@@ -80,11 +80,6 @@ public class MBComplexPage : MegaBookDynamicMesh
 
 	public void GetMeshData(GameObject obj)
 	{
-		if (obj.GetComponentsInChildren<MeshFilter>()[0].sharedMesh == null)
-		{
-			return;
-		}
-
 		verts.Clear();
 		uvs.Clear();
 		cols.Clear();
@@ -105,10 +100,6 @@ public class MBComplexPage : MegaBookDynamicMesh
 				Matrix4x4 tm = ptm * mf.transform.localToWorldMatrix;	// * ptm;
 
 				Mesh mesh = mf.sharedMesh;
-//				if (mesh == null)
-//				{
-//					return;
-//				}
 
 				Vector3[] vertices = mesh.vertices;
 				Vector2[] uv1 = mesh.uv;
@@ -161,13 +152,6 @@ public class MBComplexPage : MegaBookDynamicMesh
 
 	public override int[] GetTris(int page, bool front, int m)
 	{
-//		if (m < subtris.Count)
-//		{
-			return subtris[m];
-//		}
-//		else
-//		{
-//			ret
-//		}
+		return subtris[m];
 	}
 }
