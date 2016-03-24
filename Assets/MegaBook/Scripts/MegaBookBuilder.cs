@@ -139,6 +139,9 @@ public class MegaBookBuilder : MonoBehaviour
 	public bool					receiveshadows = true;
 	public bool					uselightprobes = false;
 
+
+	public System.Action onRebuild;
+
 	[ContextMenu("Help")]
 	public void Help()
 	{
@@ -1285,6 +1288,9 @@ public class MegaBookBuilder : MonoBehaviour
 			for ( int i = 0; i < textuvs.Length; i++ )
 				uvs.Add(textuvs[i]);
 
+//			dynamobj.BuildMesh(page.pnum, true);	//, ref textverts, ref texttris);
+
+
 			if ( usecols )
 			{
 				Color[] colverts = dynamobj.GetColors(page.pnum, true);
@@ -1944,6 +1950,11 @@ public class MegaBookBuilder : MonoBehaviour
 			RemovePages();
 			BuildPages();
 			doattach = true;
+
+			if (onRebuild != null)
+			{
+				onRebuild();
+			}
 		}
 		
 		if ( changespineangle )

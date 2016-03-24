@@ -101,36 +101,40 @@ public class MBComplexPage : MegaBookDynamicMesh
 
 				Mesh mesh = mf.sharedMesh;
 
-				Vector3[] vertices = mesh.vertices;
-				Vector2[] uv1 = mesh.uv;
-				Color[] colors = mesh.colors;
-
-				for ( int v = 0; v < mesh.vertexCount; v++ )
+				if (mesh != null)
 				{
-					verts.Add(tm.MultiplyPoint3x4(vertices[v]));
-					uvs.Add(uv1[v]);
-				}
+					Vector3[] vertices = mesh.vertices;
+					Vector2[] uv1 = mesh.uv;
+					Color[] colors = mesh.colors;
 
-				if ( mesh.colors != null && mesh.colors.Length > 0 )
-				{
 					for ( int v = 0; v < mesh.vertexCount; v++ )
-						cols.Add(colors[v]);
+					{
+						verts.Add(tm.MultiplyPoint3x4(vertices[v]));
+						uvs.Add(uv1[v]);
+					}
+
+					if ( mesh.colors != null && mesh.colors.Length > 0 )
+					{
+						for ( int v = 0; v < mesh.vertexCount; v++ )
+							cols.Add(colors[v]);
+					}
+					else
+						for ( int v = 0; v < mesh.vertexCount; v++ )
+							cols.Add(Color.white);
+
+					for ( int m = 0; m < mesh.subMeshCount; m++ )
+					{
+						int[] tris = mesh.GetTriangles(m);
+
+						for ( int t = 0; t < tris.Length; t++ )
+							tris[t] += vindex;
+
+						subtris.Add(tris);
+					}
+				
+
+					vindex += mesh.vertexCount;
 				}
-				else
-					for ( int v = 0; v < mesh.vertexCount; v++ )
-						cols.Add(Color.white);
-
-				for ( int m = 0; m < mesh.subMeshCount; m++ )
-				{
-					int[] tris = mesh.GetTriangles(m);
-
-					for ( int t = 0; t < tris.Length; t++ )
-						tris[t] += vindex;
-
-					subtris.Add(tris);
-				}
-
-				vindex += mesh.vertexCount;
 			}
 		}
 	}

@@ -134,7 +134,7 @@ namespace TMPro
 
         [SerializeField]
         private Renderer m_renderer;
-        private MeshFilter m_meshFilter;
+		private MeshFilter m_meshFilter;
         private Mesh m_mesh;
         private Transform m_transform;
 
@@ -278,7 +278,7 @@ namespace TMPro
                 m_meshFilter.mesh = m_mesh;                
                 //m_mesh.bounds = new Bounds(transform.position, new Vector3(1000, 1000, 0));               
             }           
-            m_meshFilter.hideFlags = HideFlags.HideInInspector;
+//            m_meshFilter.hideFlags = HideFlags.HideInInspector;
                       
             // Load the font asset and assign material to renderer.
             LoadFontAsset();

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PageReplacer : MonoBehaviour 
 {
@@ -18,21 +19,50 @@ public class PageReplacer : MonoBehaviour
 
 	public void ReplacePage(int pageNumber, int textNumber)
 	{
+//		book.onRebuild += OnRebuild;
+
 		TextPart textPart = textMaster.GetTextPart(textNumber);
-		pageBuilder.pages = textPart.pages;
+
+		//Delete old pages
+		List<GameObject> pages = pageBuilder.pages;
+		foreach (GameObject go in pages)
+		{
+			Destroy(go);
+		}
+		pageBuilder.pages = new List<GameObject>();
+
+		//Create and assign new pages
+		foreach (GameObject page in textPart.pages)
+		{
+			GameObject go = GameObject.Instantiate<GameObject>(page);
+			pageBuilder.pages.Add(go);
+		}
+
+//		pageBuilder.pages = textPart.pages;
 
 		Debug.Log(pageNumber.ToString());
-		book.MakePageObject(book.pages[pageNumber], 0);
+		book.BuildPageMeshes();
+//		book.rebuild = true;
+//		book.rebuildmeshes = true;
+
+//		book.UpdateAttached();
+//		book.MakePageObject(book.pages[pageNumber], 0);
 //		book.UpdateBookMT();
-//		book.UpdateAttachObject(book.pages[pageNumber], );
+//		book.UpdateAttachObject(book.pages[pageNumber], book.);
 
 //		book.pages[pageNumber].UpdateAttached();
 
 //		Debug.Log(book.pages.Count.ToString());
 //		Debug.Log(book.pageparams.Count.ToString());
 
-//		book.rebuildmeshes = true;
+	}
+
+	void OnRebuild()
+	{
+		book.onRebuild -= OnRebuild;
+
 //		book.rebuild = true;
+		book.rebuildmeshes = true;
 	}
 
 	int GetPageNumber(int textNumber)
