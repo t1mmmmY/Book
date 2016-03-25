@@ -80,7 +80,7 @@ public class MegaBookBuilder : MonoBehaviour
 	public Rect				copyarea			= new Rect(0.1f, 0.1f, 0.8f, 0.8f);
 	public Rect				copyarea1			= new Rect(0.1f, 0.1f, 0.8f, 0.8f);
 	public bool				spineedge			= true;
-	public bool				UseThreading		= false;
+	public bool				UseThreading		= true;
 	public bool				changespineangle	= true;
 	public Vector3			pagesizevariation	= Vector3.zero;
 	public Texture2D		mask;
@@ -140,7 +140,10 @@ public class MegaBookBuilder : MonoBehaviour
 	public bool					uselightprobes = false;
 
 
+	bool needUpdate = false;
+
 	public System.Action onRebuild;
+	public System.Action onFinishFlip;
 
 	[ContextMenu("Help")]
 	public void Help()
@@ -251,6 +254,8 @@ public class MegaBookBuilder : MonoBehaviour
 			turnspd = 0.0f;
 			Flip = page;
 		}
+
+		needUpdate = true;
 	}
 
 	public float GetPage()
@@ -345,6 +350,11 @@ public class MegaBookBuilder : MonoBehaviour
 
 			inf.end = 0;	// Done the job
 		}
+
+//		if (onFinishFlip != null)
+//		{
+//			onFinishFlip();
+//		}
 	}
 
 	void WaitJobs()
@@ -432,6 +442,17 @@ public class MegaBookBuilder : MonoBehaviour
 				pages[i].mesh.RecalculateNormals();
 			}
 		}
+
+		if (Flip == page && needUpdate)
+		{
+			needUpdate = false;
+			if (onFinishFlip != null)
+			{
+				onFinishFlip();
+			}
+		}
+
+//		Debug.Log("DoWork");
 	}
 
 	void OnApplicationQuit()
@@ -641,10 +662,16 @@ public class MegaBookBuilder : MonoBehaviour
 
 	void Start()
 	{
+		UseThreading = true;
+
 		if ( Application.isPlaying )
 		{
 			//if ( background && madepages.Count == 0 )
 				BuildPageTextures();
+		}
+		else
+		{
+//			needUpdate = true;
 		}
 		Flip = page;
 		rebuild = true;
@@ -2186,6 +2213,13 @@ public class MegaBookBuilder : MonoBehaviour
 				Flip = page;
 				turnspd = 0.0f;
 			}
+			else
+			{
+//				if (onFinishFlip != null)
+//				{
+//					onFinishFlip();
+//				}
+			}
 		}
 
 		bool doattach = false;
@@ -2248,14 +2282,19 @@ public class MegaBookBuilder : MonoBehaviour
 		}
 
 		// Do page turning
-		if ( UseThreading && Application.isPlaying )
+//		if ( UseThreading && Application.isPlaying && needUpdate)
+		if ( UseThreading && Application.isPlaying)
 		{
+//			Debug.Log("multi thread");
 #if !UNITY_FLASH && !UNITY_PS3 && !UNITY_METRO && !UNITY_WP8
 			UpdateBookMT();
 #endif
 		}
+//		else if (needUpdate || Application.isPlaying)
 		else
 		{
+//			Debug.Log("one thread");
+
 			bool dohole = true;
 			for ( int i = 0; i < pages.Count; i++ )
 			{

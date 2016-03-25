@@ -14,6 +14,17 @@ public class TextMaster : ScriptableObject
 {
 	[SerializeField] TextPart[] textParts;
 
+	public int[] GetAllPageNumbers()
+	{
+		int[] pageNumbers = new int[textParts.Length];
+		for (int i = 0; i < pageNumbers.Length; i++)
+		{
+			pageNumbers[i] = textParts[i].number;
+		}
+
+		return pageNumbers;
+	}
+
 	public TextPart GetTextPart(int number)
 	{
 		return FindTextPart(number);
