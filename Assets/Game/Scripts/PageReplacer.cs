@@ -41,7 +41,12 @@ public class PageReplacer : MonoBehaviour
 //		pageBuilder.pages = textPart.pages;
 
 		Debug.Log(pageNumber.ToString());
-		book.BuildPageMeshes();
+		book.AttachDynamicObjectToPage(book.pages[pageNumber], 0);
+//		book.pages[0].obj = book.MakePageObject(book.pages[0], 0);
+//		book.BuildPageMeshes(); //It is working!
+//		book.pages[0].UpdateAttached(book.pageparams[0].objects[0], 0);
+//		book.MakePageObject
+
 //		book.rebuild = true;
 //		book.rebuildmeshes = true;
 
@@ -78,9 +83,9 @@ public class PageReplacer : MonoBehaviour
 			{
 				ReplacePage(GetPageNumber(312), 312);
 			}
-			if (GUILayout.Button("72"))
+			if (GUILayout.Button("0"))
 			{
-				ReplacePage(GetPageNumber(72), 72);
+				ReplacePage(GetPageNumber(0), 0);
 			}
 			if (GUILayout.Button("28"))
 			{

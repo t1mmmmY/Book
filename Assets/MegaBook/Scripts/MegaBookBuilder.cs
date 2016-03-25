@@ -997,6 +997,248 @@ public class MegaBookBuilder : MonoBehaviour
 		return cobj;
 	}
 
+	public void AttachDynamicObjectToPage(MegaBookPage page, int pnum)
+	{
+		float width = pageWidth;
+		float length = pageLength;
+		float height = pageHeight;
+
+		MeshFilter mf = page.mf;
+		MeshRenderer cmr = page.mf.GetComponent<MeshRenderer>();
+
+		MegaBookPageParams pp = pageparams[pageindex];
+
+		page.stiff = pp.stiff;
+
+		if ( pageobject || pp.pageobj )
+		{
+			GameObject obj = pageobject;
+			Vector3 rot = rotate;
+
+			if ( pp.pageobj )
+			{
+				obj = pp.pageobj;
+				rot = pp.rotate;
+			}
+
+			Mesh mesh = CopyMeshObject(page, obj, width, length, height, rot);	//ate);
+			mf.sharedMesh = mesh;
+
+			if ( page.collider )
+			{
+				page.collider.sharedMesh = null;
+				page.collider.sharedMesh = mesh;
+			}
+
+			MeshRenderer mr = obj.GetComponent<MeshRenderer>();
+
+			Material[] mats = new Material[mr.sharedMaterials.Length];
+
+			for ( int i = 0; i < mats.Length; i++ )
+			{
+				mats[i] = new Material(mr.sharedMaterials[i]);
+			}
+
+			int fm = frontmat;
+			if ( pp.frontmatindex != -1 )
+				fm = pp.frontmatindex;
+
+			if ( fm >= 0 && fm < mats.Length )
+			{
+				if ( pp.madefront )
+					mats[fm].mainTexture = pp.madefront;
+				else
+					mats[fm].mainTexture = pp.front;
+			}
+
+			int bm = backmat;
+			if ( pp.backmatindex != -1 )
+				bm = pp.backmatindex;
+
+			if ( bm >= 0 && bm < mats.Length )
+			{
+				if ( pp.madeback )
+					mats[bm].mainTexture = pp.madeback;
+				else
+					mats[bm].mainTexture = pp.back;
+			}
+
+			cmr.sharedMaterials = mats;	//mr.sharedMaterials;
+
+			obj = holeobject;
+			if ( pp.holeobj )
+				obj = pp.holeobj;
+
+			if ( holeobject )
+				page.holemesh = CopyMeshObjectHole(page, holeobject, width, length, height, rot);
+		}
+		else
+		{
+			Vector3 rot = rotate;
+			Mesh pm = pagemesh;
+			if ( pp.pagemesh )
+			{
+				pm = pp.pagemesh;
+				rot = pp.rotate;
+			}
+
+			if ( pm )
+			{
+				// make a copy of pagemesh
+				Mesh mesh = CopyMesh(page, pm, width, length, height, rot);
+				mf.sharedMesh = mesh;
+
+				Material[] mats = new Material[3];
+
+				int m1 = frontmat;
+				int m2 = backmat;
+
+				if ( pp.frontmatindex != -1 )
+					m1 = pp.frontmatindex;
+
+				if ( pp.backmatindex != -1 )
+					m2 = pp.backmatindex;
+
+				m1 = Mathf.Clamp(m1, 0, 2);
+				m2 = Mathf.Clamp(m2, 0, 2);
+
+				if ( pp.swapsides )
+				{
+					int m = m1;
+					m1 = m2;
+					m2 = m;
+				}
+
+				if ( pp.frontmat )
+					mats[m1] = new Material(pp.frontmat);
+				else
+					mats[m1] = new Material(basematerial);
+
+				if ( pp.backmat )
+					mats[m2] = new Material(pp.backmat);
+				else
+					mats[m2] = new Material(basematerial1);
+
+				if ( pp.edgemat )
+					mats[2] = pp.edgemat;
+				else
+					mats[2] = basematerial2;
+
+				if ( pp.madefront )
+					mats[m1].mainTexture = pp.madefront;
+				else
+					mats[m1].mainTexture = pp.front;
+
+				if ( pp.madeback )
+					mats[m2].mainTexture = pp.madeback;
+				else
+					mats[m2].mainTexture = pp.back;
+
+				cmr.sharedMaterials = mats;
+
+				if ( page.collider )
+				{
+					page.collider.sharedMesh = null;
+					page.collider.sharedMesh = mesh;
+				}
+
+				Mesh hmesh = holemesh;
+				if ( pp.holemesh != null )
+					hmesh = pp.holemesh;
+
+				if ( hmesh )
+					page.holemesh = CopyMeshHole(page, hmesh, width, length, height, rot);
+			}
+			else
+			{
+				// Make a procedural page mesh
+				//Mesh mesh = CreatePageMesh(page, pageWidth, pageLength, pageHeight, WidthSegs, LengthSegs, HeightSegs);
+				Mesh mesh = CreatePageMesh(page, width, length, height, WidthSegs, LengthSegs, HeightSegs, pnum);
+
+				if ( useholepage )
+					page.holemesh = CreatePageMeshHole(page, width, length, height, WidthSegs, LengthSegs, HeightSegs, xhole, yhole);
+
+				mf.sharedMesh = mesh;	//new Mesh();
+
+				Material[] mats;
+
+				if ( dynamobj && dynammeshenabled )
+				{
+					int nmb = dynamobj.GetNumMaterials(pnum, false);
+
+					int nmf = dynamobj.GetNumMaterials(pnum, true);
+					int tnum = nmf + nmb;	//dynamobj.GetNumMaterials(page.pnum, false);
+
+					mats = new Material[3 + tnum];
+
+					for ( int i = 0; i < nmf; i++ )
+					{
+						//mats[3 + i] = new Material(dynamobj.GetMaterial(page.pnum, true, i));
+						mats[3 + i] = dynamobj.GetMaterial(pnum, true, i);
+					}
+
+					nmb = dynamobj.GetNumMaterials(pnum, false);
+					for ( int i = 0; i < nmb; i++ )
+					{
+						//mats[3 + nmf + i] = new Material(dynamobj.GetMaterial(page.pnum, false, i));
+						mats[3 + nmf + i] = dynamobj.GetMaterial(pnum, false, i);
+					}
+				}
+				else
+					mats = new Material[3];
+
+				if ( pp.frontmat )
+					mats[0] = new Material(pp.frontmat);
+				else
+				{
+					if ( basematerial )
+						mats[0] = new Material(basematerial);
+				}
+
+				if ( pp.backmat )
+					mats[1] = new Material(pp.backmat);
+				else
+				{
+					if ( basematerial1 )
+						mats[1] = new Material(basematerial1);
+				}
+
+				if ( pp.edgemat )
+					mats[2] = pp.edgemat;
+				else
+					mats[2] = basematerial2;
+
+				if ( pp.madefront )
+					mats[0].mainTexture = pp.madefront;
+				else
+					mats[0].mainTexture = pp.front;
+
+				if ( pp.madeback )
+					mats[1].mainTexture = pp.madeback;
+				else
+					mats[1].mainTexture = pp.back;
+
+				cmr.sharedMaterials = mats;
+
+				if ( page.collider )
+				{
+					page.collider.sharedMesh = null;
+					page.collider.sharedMesh = mesh;
+				}
+			}
+		}
+
+		page.mesh.name = "PageMesh " + pnum;
+		// Attach objects
+		page.visobjlow = pp.visobjlow;
+		page.visobjhigh = pp.visobjhigh;
+
+		for ( int i = 0; i < pp.objects.Count; i++ )
+		{
+			AttachObject(page, pp.objects[i]);
+		}
+	}
+
 	static void MakeQuad1(List<int> f, int a, int b, int c, int d)
 	{
 		f.Add(a);
@@ -1026,8 +1268,13 @@ public class MegaBookBuilder : MonoBehaviour
 		}
 	}
 
-	Mesh CreatePageMesh(MegaBookPage page, float width, float length, float height, int widthsegs, int lengthsegs, int heightsegs)
+	Mesh CreatePageMesh(MegaBookPage page, float width, float length, float height, int widthsegs, int lengthsegs, int heightsegs, int pnum = -1)
 	{
+		if (pnum == -1)
+		{
+			pnum = page.pnum;
+		}
+
 		Mesh mesh = new Mesh();
 
 		Vector3 vb = new Vector3(width, height, length) / 2.0f;
@@ -1278,10 +1525,10 @@ public class MegaBookBuilder : MonoBehaviour
 
 			Vector3 lscl = Vector3.Scale(losscl, dynamscale);
 			Matrix4x4 tm = Matrix4x4.TRS(Vector3.Scale(dynamoffset, losscl), Quaternion.Euler(dynamrot), lscl);	//dynamscale);
-			dynamobj.BuildMesh(page.pnum, true);	//, ref textverts, ref texttris);
+			dynamobj.BuildMesh(pnum, true);	//, ref textverts, ref texttris);
 
-			Vector2[] textuvs = dynamobj.GetUVs(page.pnum, true);
-			Vector3[] textverts = dynamobj.GetVertices(page.pnum, true);
+			Vector2[] textuvs = dynamobj.GetUVs(pnum, true);
+			Vector3[] textverts = dynamobj.GetVertices(pnum, true);
 			for ( int i = 0; i < textverts.Length; i++ )
 				verts.Add(tm.MultiplyPoint3x4(textverts[i]));
 
@@ -1293,7 +1540,7 @@ public class MegaBookBuilder : MonoBehaviour
 
 			if ( usecols )
 			{
-				Color[] colverts = dynamobj.GetColors(page.pnum, true);
+				Color[] colverts = dynamobj.GetColors(pnum, true);
 
 				if ( colverts == null || colverts.Length == 0 )
 				{
@@ -1307,16 +1554,16 @@ public class MegaBookBuilder : MonoBehaviour
 				}
 			}
 
-			for ( int m = 0; m < dynamobj.GetNumMaterials(page.pnum, true); m++ )
-				dtris.Add(dynamobj.GetTris(page.pnum, true, m));
+			for ( int m = 0; m < dynamobj.GetNumMaterials(pnum, true); m++ )
+				dtris.Add(dynamobj.GetTris(pnum, true, m));
 
 			tib = verts.Count;
 			lscl = Vector3.Scale(losscl, backdynamscale);
 			tm = Matrix4x4.TRS(Vector3.Scale(losscl, backdynamoffset), Quaternion.Euler(backdynamrot), lscl);	//backdynamscale);
-			dynamobj.BuildMesh(page.pnum, false);	//, ref textverts, ref texttris);
+			dynamobj.BuildMesh(pnum, false);	//, ref textverts, ref texttris);
 
-			textuvs = dynamobj.GetUVs(page.pnum, false);
-			textverts = dynamobj.GetVertices(page.pnum, false);
+			textuvs = dynamobj.GetUVs(pnum, false);
+			textverts = dynamobj.GetVertices(pnum, false);
 			for ( int i = 0; i < textverts.Length; i++ )
 				verts.Add(tm.MultiplyPoint3x4(textverts[i]));
 
@@ -1325,7 +1572,7 @@ public class MegaBookBuilder : MonoBehaviour
 
 			if ( usecols )
 			{
-				Color[] colverts = dynamobj.GetColors(page.pnum, false);
+				Color[] colverts = dynamobj.GetColors(pnum, false);
 
 				if ( colverts == null || colverts.Length == 0 )
 				{
@@ -1339,8 +1586,8 @@ public class MegaBookBuilder : MonoBehaviour
 				}
 			}
 
-			for ( int m = 0; m < dynamobj.GetNumMaterials(page.pnum, false); m++ )
-				dtris.Add(dynamobj.GetTris(page.pnum, false, m));
+			for ( int m = 0; m < dynamobj.GetNumMaterials(pnum, false); m++ )
+				dtris.Add(dynamobj.GetTris(pnum, false, m));
 		}
 
 		page.verts = verts.ToArray();
@@ -1349,7 +1596,7 @@ public class MegaBookBuilder : MonoBehaviour
 		mesh.Clear();
 
 		if ( dynamobj && dynammeshenabled )
-			mesh.subMeshCount = 3 + dynamobj.GetNumMaterials(page.pnum, true) + dynamobj.GetNumMaterials(page.pnum, false);
+			mesh.subMeshCount = 3 + dynamobj.GetNumMaterials(pnum, true) + dynamobj.GetNumMaterials(pnum, false);
 		else
 			mesh.subMeshCount = 3;
 
@@ -1364,10 +1611,10 @@ public class MegaBookBuilder : MonoBehaviour
 
 		if ( dynamobj && dynammeshenabled )
 		{
-			int mo = dynamobj.GetNumMaterials(page.pnum, true);
+			int mo = dynamobj.GetNumMaterials(pnum, true);
 			int ix = 0;
 
-			for ( int m = 0; m < dynamobj.GetNumMaterials(page.pnum, true); m++ )
+			for ( int m = 0; m < dynamobj.GetNumMaterials(pnum, true); m++ )
 			{
 				int[] texttris = dtris[ix++];	//dynamobj.GetTris(page.pnum, true, m);
 
@@ -1377,7 +1624,7 @@ public class MegaBookBuilder : MonoBehaviour
 				mesh.SetTriangles(texttris, 3 + m);
 			}
 
-			for ( int m = 0; m < dynamobj.GetNumMaterials(page.pnum, false); m++ )
+			for ( int m = 0; m < dynamobj.GetNumMaterials(pnum, false); m++ )
 			{
 				//int[] texttris = dynamobj.GetTris(page.pnum, false, m);
 				int[] texttris = dtris[ix++];	//dynamobj.GetTris(page.pnum, true, m);
@@ -2027,7 +2274,7 @@ public class MegaBookBuilder : MonoBehaviour
 		}
 	}
 
-	MegaBookPage CreatePage(int i)
+	public MegaBookPage CreatePage(int i)
 	{
 		MegaBookPage page = new MegaBookPage();
 
