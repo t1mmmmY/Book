@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEditor;
+//using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -46,10 +46,10 @@ public class TextMaster : ScriptableObject
 
 
 
-	[MenuItem("Assets/Create/TextMaster")]
-	public static void CreateAsset ()
-	{
-		ScriptableObjectUtility.CreateAsset<TextMaster>();
-	}
+//	[MenuItem("Assets/Create/TextMaster")]
+//	public static void CreateAsset ()
+//	{
+//		ScriptableObjectUtility.CreateAsset<TextMaster>();
+//	}
 
 }
