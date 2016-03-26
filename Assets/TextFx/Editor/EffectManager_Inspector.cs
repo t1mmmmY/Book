@@ -247,7 +247,13 @@ public class EffectManager_Inspector : Editor
 			
 			EditorGUILayout.EndHorizontal();
 		}
-		
+
+
+//		if(GUILayout.Button("Rebuild"))
+//		{
+//			EditorUtility.SetDirty(font_manager);
+//		}
+
 		if (GUI.changed)
 		{
 			EditorUtility.SetDirty(font_manager);

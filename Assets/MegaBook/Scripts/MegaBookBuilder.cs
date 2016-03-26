@@ -80,7 +80,7 @@ public class MegaBookBuilder : MonoBehaviour
 	public Rect				copyarea			= new Rect(0.1f, 0.1f, 0.8f, 0.8f);
 	public Rect				copyarea1			= new Rect(0.1f, 0.1f, 0.8f, 0.8f);
 	public bool				spineedge			= true;
-	public bool				UseThreading		= true;
+	public bool				UseThreading		= false;
 	public bool				changespineangle	= true;
 	public Vector3			pagesizevariation	= Vector3.zero;
 	public Texture2D		mask;
@@ -662,7 +662,7 @@ public class MegaBookBuilder : MonoBehaviour
 
 	void Start()
 	{
-		UseThreading = true;
+//		UseThreading = true;
 
 		if ( Application.isPlaying )
 		{
