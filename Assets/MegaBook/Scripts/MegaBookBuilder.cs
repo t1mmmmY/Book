@@ -662,7 +662,7 @@ public class MegaBookBuilder : MonoBehaviour
 
 	void Start()
 	{
-//		UseThreading = true;
+		UseThreading = false;
 
 		if ( Application.isPlaying )
 		{
@@ -2388,7 +2388,7 @@ public class MegaBookBuilder : MonoBehaviour
 			page.visobjlow = parms.visobjlow;
 			page.visobjhigh = parms.visobjhigh;
 
-			//Debug.Log("pobjs " + page.objects.Count + " param " + parms.objects.Count);
+//			Debug.Log("pobjs " + page.objects.Count + " param " + parms.objects.Count);
 			//int ix = 0;
 			for ( int j = 0; j < parms.objects.Count; j++ )
 			{

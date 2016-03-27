@@ -675,10 +675,10 @@ public class MegaBookBuilderEditor : Editor
 		}
 
 		// debug
-		for ( int i = 0; i < mod.pages.Count; i++ )
-		{
-			mod.pages[i].turnerfromcon = EditorGUILayout.CurveField("Turn", mod.pages[i].turnerfromcon);
-		}
+//		for ( int i = 0; i < mod.pages.Count; i++ )
+//		{
+//			mod.pages[i].turnerfromcon = EditorGUILayout.CurveField("Turn", mod.pages[i].turnerfromcon);
+//		}
 
 		//for ( int i = 0; i < mod.pages.Count; i++ )
 		//{

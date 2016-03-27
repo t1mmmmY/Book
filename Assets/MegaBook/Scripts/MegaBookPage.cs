@@ -100,6 +100,8 @@ public class MegaBookPage
 
 	public void Update(MegaBookBuilder book, float flip, bool dohole)
 	{
+//		Debug.Log("Update page");
+
 		if ( book.runcontrollers )
 		{
 			float angle = -landerangcon.Evaluate(flip);
@@ -236,6 +238,7 @@ public class MegaBookPage
 			}
 		}
 
+//		Debug.Log("Page update");
 		// Update attached objects
 		for ( int i = 0; i < objects.Count; i++ )
 		{
@@ -247,8 +250,10 @@ public class MegaBookPage
 	{
 		GameObject target = pobj.obj;
 
+//		Debug.Log("UpdateAttached");
 		if ( target )
 		{
+//			Debug.Log("target != null");
 			bool show = showobjects;
 
 			if ( pobj.overridevisi )
@@ -274,13 +279,21 @@ public class MegaBookPage
 #else
 			if ( show )	//objects )
 			{
+//				Debug.Log("Must show");
 				if ( !target.activeInHierarchy )
+				{
+//					Debug.Log("SetActive(true)");
 					target.SetActive(true);
+				}
 			}
 			else
 			{
+//				Debug.Log("Must hide");
 				if ( target.activeInHierarchy )
+				{
+//					Debug.Log("SetActive(false)");
 					target.SetActive(false);
+				}
 				return;
 			}
 #endif
