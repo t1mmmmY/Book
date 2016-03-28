@@ -52,17 +52,14 @@ public class PageReplacer : MonoBehaviour
 			toDelPageNumbers.Add(page);
 		}
 
-//		oldPageNumbers = new List<int>();
-//		foreach (int page in currentPageNumbers)
-//		{
-//			oldPageNumbers.Add(page);
-//		}
-
+		List<InteractivePage> createdPages = new List<InteractivePage>();
 		//Create and assign new pages
-		foreach (GameObject page in textPart.pages)
+		foreach (InteractivePage page in textPart.pages)
 		{
-			GameObject go = GameObject.Instantiate<GameObject>(page);
-			pageBuilder.pages.Add(go);
+			InteractivePage iPage = GameObject.Instantiate<InteractivePage>(page);
+			createdPages.Add(iPage);
+
+			pageBuilder.pages.Add(iPage.gameObject);
 		}
 
 
@@ -70,11 +67,55 @@ public class PageReplacer : MonoBehaviour
 
 		currentPageNumbers = new List<int>();
 
+
+		//Attach buttons to bage
 		for (int i = 0; i < pageBuilder.pages.Count; i++)
 		{
+			book.pageparams[i].objects = new List<MegaBookPageObject>();
+//			int pageparamsNumber = i / 2;
+
+			AttachedObject[] attachments = createdPages[i].GetAttachedObjects();
+			if (attachments.Length > 0)
+			{
+//				int pageparamsNumber = i / 2;
+				int pageparamsNumber = i;
+
+
+				foreach (AttachedObject attachment in attachments)
+				{
+					MegaBookPageObject pageObj = new MegaBookPageObject();
+					pageObj.AddAttachment(attachment);
+
+					book.pageparams[pageparamsNumber].objects.Add(pageObj);
+				}
+			}
+
+		}
+
+		for (int i = 0; i < pageBuilder.pages.Count; i++)
+		{
+			//Attach buttons to bage
+//			book.pageparams[i].objects = new List<MegaBookPageObject>();
+//
+//			AttachedObject[] attachments = createdPages[i].GetAttachedObjects();
+//			if (attachments.Length > 0)
+//			{
+//				int pageparamsNumber = i / 2;
+//
+//
+//				foreach (AttachedObject attachment in attachments)
+//				{
+//					MegaBookPageObject pageObj = new MegaBookPageObject();
+//					pageObj.AddAttachment(attachment);
+//
+//					book.pageparams[pageparamsNumber].objects.Add(pageObj);
+//				}
+//			}
+
 			book.AttachDynamicObjectToPage(book.pages[pageNumber + i], i);
 			currentPageNumbers.Add(pageNumber + i);
 		}
+
 
 	}
 

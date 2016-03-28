@@ -2392,7 +2392,7 @@ public class MegaBookBuilder : MonoBehaviour
 			//int ix = 0;
 			for ( int j = 0; j < parms.objects.Count; j++ )
 			{
-				//if ( parms.objects[j].obj )
+				if ( parms.objects[j].obj && j < page.objects.Count)
 				{
 					page.objects[j].pos = parms.objects[j].pos;
 					page.objects[j].rot = parms.objects[j].rot;

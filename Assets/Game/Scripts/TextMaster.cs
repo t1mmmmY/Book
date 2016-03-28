@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class TextPart
 {
 	public int number;
-	public List<GameObject> pages;
+	public List<InteractivePage> pages;
 }
 
 public class TextMaster : ScriptableObject 

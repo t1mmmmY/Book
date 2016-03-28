@@ -19,6 +19,19 @@ public class MegaBookPageObject
 	public float		visilow = -1.0f;
 	public float		visihigh = 1.0f;
 	public bool			message = false;
+
+
+	public void AddAttachment(AttachedObject attachment)
+	{
+		obj = attachment.gameObject;
+		pos = attachment.position;
+		rot = attachment.rotation;
+		offset = attachment.offset;
+		attachforward = attachment.forward;
+		overridevisi = true;
+		visilow = -1;
+		visihigh = 1;
+	}
 }
 
 [System.Serializable]
