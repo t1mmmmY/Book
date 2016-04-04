@@ -35,7 +35,12 @@ public class PageReplacer : MonoBehaviour
 		List<GameObject> pages = pageBuilder.pages;
 		foreach (GameObject go in pages)
 		{
-			Destroy(go);
+			InteractivePage page = go.GetComponent<InteractivePage>();
+			if (page != null)
+			{
+				page.DestroyPage();
+			}
+//			Destroy(go);
 		}
 		pageBuilder.pages = new List<GameObject>();
 
@@ -71,22 +76,28 @@ public class PageReplacer : MonoBehaviour
 		//Attach buttons to bage
 		for (int i = 0; i < pageBuilder.pages.Count; i++)
 		{
-			book.pageparams[i].objects = new List<MegaBookPageObject>();
+//			book.pageparams[i].objects = new List<MegaBookPageObject>();
 //			int pageparamsNumber = i / 2;
 
 			AttachedObject[] attachments = createdPages[i].GetAttachedObjects();
 			if (attachments.Length > 0)
 			{
-//				int pageparamsNumber = i / 2;
-				int pageparamsNumber = i;
+//				int pageparamsNumber = i;
+				int pageparamsNumber = i / 2;
+				Debug.Log("page number = " + pageparamsNumber.ToString());
 
 
 				foreach (AttachedObject attachment in attachments)
 				{
+					//Detach from page
+					attachment.gameObject.transform.parent = attachment.gameObject.transform.parent.parent;
+
 					MegaBookPageObject pageObj = new MegaBookPageObject();
 					pageObj.AddAttachment(attachment);
 
-					book.pageparams[pageparamsNumber].objects.Add(pageObj);
+//					book.pageparams[pageparamsNumber].pageobj = attachment.gameObject;
+					book.AttachObject(book.pages[pageparamsNumber], pageObj);
+//					book.pageparams[pageparamsNumber].objects.Add(pageObj);
 				}
 			}
 
@@ -94,24 +105,6 @@ public class PageReplacer : MonoBehaviour
 
 		for (int i = 0; i < pageBuilder.pages.Count; i++)
 		{
-			//Attach buttons to bage
-//			book.pageparams[i].objects = new List<MegaBookPageObject>();
-//
-//			AttachedObject[] attachments = createdPages[i].GetAttachedObjects();
-//			if (attachments.Length > 0)
-//			{
-//				int pageparamsNumber = i / 2;
-//
-//
-//				foreach (AttachedObject attachment in attachments)
-//				{
-//					MegaBookPageObject pageObj = new MegaBookPageObject();
-//					pageObj.AddAttachment(attachment);
-//
-//					book.pageparams[pageparamsNumber].objects.Add(pageObj);
-//				}
-//			}
-
 			book.AttachDynamicObjectToPage(book.pages[pageNumber + i], i);
 			currentPageNumbers.Add(pageNumber + i);
 		}

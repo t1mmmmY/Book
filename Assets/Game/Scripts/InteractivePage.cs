@@ -14,4 +14,13 @@ public class InteractivePage : MonoBehaviour
 	{
 		
 	}
+
+	public void DestroyPage()
+	{
+		foreach (AttachedObject attachment in attachedObjects)
+		{
+			Destroy(attachment.gameObject);
+		}
+		Destroy(this.gameObject);
+	}
 }
