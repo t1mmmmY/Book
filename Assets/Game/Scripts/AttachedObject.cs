@@ -9,4 +9,5 @@ public class AttachedObject
 	public Vector3 rotation;
 	public float offset;
 	public Vector3 forward;
+	public Vector2 pageVisibility;
 }

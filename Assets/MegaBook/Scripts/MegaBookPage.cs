@@ -29,8 +29,8 @@ public class MegaBookPageObject
 		offset = attachment.offset;
 		attachforward = attachment.forward;
 		overridevisi = true;
-		visilow = -1;
-		visihigh = 1;
+		visilow = attachment.pageVisibility.x;
+		visihigh = attachment.pageVisibility.y;
 	}
 }
 
