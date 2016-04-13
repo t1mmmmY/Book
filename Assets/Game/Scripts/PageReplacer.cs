@@ -72,17 +72,31 @@ public class PageReplacer : MonoBehaviour
 
 		currentPageNumbers = new List<int>();
 
+		StartCoroutine(Wait(0.01f, pageNumber, createdPages, ChangeBook));
 
+	}
+
+	IEnumerator Wait(float time, int pageNumber, List<InteractivePage> createdPages, System.Action<int, List<InteractivePage>> callback)
+	{
+		yield return new WaitForSeconds(time);
+		if (callback != null)
+		{
+			callback(pageNumber, createdPages);
+		}
+	}
+
+	void ChangeBook(int pageNumber, List<InteractivePage> createdPages)
+	{
 		//Attach buttons to bage
 		for (int i = 0; i < pageBuilder.pages.Count; i++)
 		{
-//			book.pageparams[i].objects = new List<MegaBookPageObject>();
-//			int pageparamsNumber = i / 2;
+			//			book.pageparams[i].objects = new List<MegaBookPageObject>();
+			//			int pageparamsNumber = i / 2;
 
 			AttachedObject[] attachments = createdPages[i].GetAttachedObjects();
 			if (attachments.Length > 0)
 			{
-//				int pageparamsNumber = i;
+				//				int pageparamsNumber = i;
 				int pageparamsNumber = i / 2;
 				Debug.Log("page number = " + pageparamsNumber.ToString());
 
@@ -95,9 +109,9 @@ public class PageReplacer : MonoBehaviour
 					MegaBookPageObject pageObj = new MegaBookPageObject();
 					pageObj.AddAttachment(attachment);
 
-//					book.pageparams[pageparamsNumber].pageobj = attachment.gameObject;
+					//					book.pageparams[pageparamsNumber].pageobj = attachment.gameObject;
 					book.AttachObject(book.pages[pageparamsNumber], pageObj);
-//					book.pageparams[pageparamsNumber].objects.Add(pageObj);
+					//					book.pageparams[pageparamsNumber].objects.Add(pageObj);
 				}
 			}
 
@@ -108,8 +122,6 @@ public class PageReplacer : MonoBehaviour
 			book.AttachDynamicObjectToPage(book.pages[pageNumber + i], i);
 			currentPageNumbers.Add(pageNumber + i);
 		}
-
-
 	}
 
 	public void DeleteOldText()

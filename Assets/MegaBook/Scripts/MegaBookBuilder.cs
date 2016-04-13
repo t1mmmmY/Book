@@ -816,6 +816,7 @@ public class MegaBookBuilder : MonoBehaviour
 			for ( int i = 0; i < mats.Length; i++ )
 			{
 				mats[i] = new Material(mr.sharedMaterials[i]);
+//				Debug.Log("ReplaceMaterial");
 			}
 
 			int fm = frontmat;
