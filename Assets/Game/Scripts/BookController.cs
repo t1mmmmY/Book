@@ -1,11 +1,13 @@
-﻿#define BOOK_DEBUG
+﻿//#define BOOK_DEBUG
 
 using UnityEngine;
 using System.Collections;
 
-public class BookController : MonoBehaviour 
+public class BookController : BaseSingleton<BookController> 
 {
 	[SerializeField] MegaBookBuilder book;
+	[SerializeField] PageReplacer pageReplacer;
+	[SerializeField] TextMaster _textMaster;
 	int pageCount = 100;
 
 	[Range(0.0f, 5.0f)] 
@@ -15,15 +17,32 @@ public class BookController : MonoBehaviour
 
 	public System.Action onFinishFlip;
 
+	public TextMaster textMaster
+	{
+		get { return _textMaster; }
+	}
+
 	void Start()
 	{
 		sliderValue = (int)book.page;
 		pageCount = book.NumPages;
+
+		StartGame();
 	}
 
+	void StartGame()
+	{
+		SetPage(textMaster.GetAllPageNumbers()[0]);
+	}
+
+	public void SetPage(int pageNumber)
+	{
+		pageReplacer.ReplacePage(pageNumber);
+	}
 
 	public void GoToPage(int pageNumber)
 	{
+		Debug.Log("pageNumber " + pageNumber.ToString());
 //		book.onFinishFlip += OnFinishFlip;
 		book.SetPage(pageNumber, false);
 

@@ -6,8 +6,8 @@ public class PageReplacer : MonoBehaviour
 {
 	[SerializeField] MegaBookBuilder book;
 	[SerializeField] MBComplexPage pageBuilder;
-	[SerializeField] BookController bookController;
-	[SerializeField] TextMaster textMaster;
+//	[SerializeField] BookController bookController;
+
 
 	List<int> toDelPageNumbers;
 	List<int> oldPageNumbers;
@@ -16,20 +16,20 @@ public class PageReplacer : MonoBehaviour
 	float scaler = 0.05f;
 	int[] pageNumbers;
 
-	void Start()
+	void Awake()
 	{
 		toDelPageNumbers = new List<int>();
 		oldPageNumbers = new List<int>();
 		currentPageNumbers = new List<int>();
-		pageNumbers = textMaster.GetAllPageNumbers();
+		pageNumbers = BookController.Instance.textMaster.GetAllPageNumbers();
 
 		int numPages = book.NumPages;
 		scaler = numPages / 1000.0f;
 	}
 
-	public void CreateNewText(int pageNumber, int textNumber)
+	void CreateNewText(int pageNumber, int textNumber)
 	{
-		TextPart textPart = textMaster.GetTextPart(textNumber);
+		TextPart textPart = BookController.Instance.textMaster.GetTextPart(textNumber);
 
 		//Delete old pages
 		List<GameObject> pages = pageBuilder.pages;
@@ -124,7 +124,7 @@ public class PageReplacer : MonoBehaviour
 		}
 	}
 
-	public void DeleteOldText()
+	void DeleteOldText()
 	{
 		foreach (int number in toDelPageNumbers)
 		{
@@ -133,45 +133,38 @@ public class PageReplacer : MonoBehaviour
 		}
 	}
 
+	public void ReplacePage(int number)
+	{
+		DeleteOldText();
+		CreateNewText(GetPageNumber(number), number);
+		BookController.Instance.GoToPage(GetPageNumber(number));
+	}
+
 
 	int GetPageNumber(int textNumber)
 	{
 		return Mathf.RoundToInt(textNumber * scaler);
 	}
 
-	void OnGUI()
-	{
-		GUILayout.BeginHorizontal();
-		{
-			foreach (int number in pageNumbers)
-			{
-				if (GUILayout.Button(number.ToString()))
-				{
-					DeleteOldText();
-					CreateNewText(GetPageNumber(number), number);
-
-//					bookController.onFinishFlip += OnFinishFlip;
-					bookController.GoToPage(GetPageNumber(number));
-
-				}
-			}
-
-//			for (int i = 0; i < pageNumbers.Length; i++)
+//	void OnGUI()
+//	{
+//		GUILayout.BeginHorizontal();
+//		{
+//			foreach (int number in pageNumbers)
 //			{
-//				if (GUILayout.Button(pageNumbers[i].ToString()))
+//				if (GUILayout.Button(number.ToString()))
 //				{
-//					CreateNewText(GetPageNumber(pageNumbers[i]), pageNumbers[i]);
+//					DeleteOldText();
+//					CreateNewText(GetPageNumber(number), number);
 //
-//					bookController.GoToPage(GetPageNumber(pageNumbers[i]), () =>
-//					{
-//						DeleteOldText();
-//					});
+//					BookController.Instance.GoToPage(GetPageNumber(number));
 //
 //				}
 //			}
-
-		} GUILayout.EndHorizontal();
-	}
+//
+//
+//		} GUILayout.EndHorizontal();
+//	}
 
 
 //	void OnFinishFlip()

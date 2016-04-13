@@ -11,9 +11,10 @@ public enum ActionType
 public class BookButton : MonoBehaviour, InteractiveObject 
 {
 	[SerializeField] ActionType actionType;
+	[SerializeField] int pageNumber = 0;
 
 	[SerializeField] MeshRenderer buttonRender;
-	[SerializeField] ButtonAnimation buttonAnimation;
+//	[SerializeField] ButtonAnimation buttonAnimation;
 	[SerializeField] bool active = true;
 
 	[Range(0.001f, 0.5f)]
@@ -22,6 +23,7 @@ public class BookButton : MonoBehaviour, InteractiveObject
 	[SerializeField] int targetV = 200;
 
 	Material buttonMaterial;
+	bool click = false;
 
 	void Awake()
 	{
@@ -41,6 +43,12 @@ public class BookButton : MonoBehaviour, InteractiveObject
 
 	public void OnRelease()
 	{
+		if (click)
+		{
+			//Animation running
+			return;
+		}
+
 		Debug.Log("Click button");
 		StartCoroutine("ClickAnimation");
 //		buttonAnimation.Click(MakeAction);
@@ -48,6 +56,8 @@ public class BookButton : MonoBehaviour, InteractiveObject
 
 	IEnumerator ClickAnimation()
 	{
+		click = true;
+
 		float elapsedTime = 0;
 		float h;
 		float s;
@@ -86,11 +96,20 @@ public class BookButton : MonoBehaviour, InteractiveObject
 
 		} while (elapsedTime < 1.0f);
 
+		click = false;
 		MakeAction();
 	}
 
 	void MakeAction()
 	{
+		switch (actionType)
+		{
+			case ActionType.MoveToPage:
+				BookController.Instance.SetPage(pageNumber);
+				break;
+			case ActionType.TakeObject:
+				break;
+		}
 	}
 
 }

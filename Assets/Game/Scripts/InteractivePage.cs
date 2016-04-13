@@ -1,8 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class InteractivePage : MonoBehaviour 
+enum PageAction
 {
+	NextPage,
+	PrevPage,
+	Nothing
+}
+
+//[RequireComponent(typeof(BoxCollider))]
+public class InteractivePage : MonoBehaviour
+{
+	[SerializeField] PageAction pageAction;
 	[SerializeField] AttachedObject[] attachedObjects;
 
 	public AttachedObject[] GetAttachedObjects()
@@ -23,4 +32,27 @@ public class InteractivePage : MonoBehaviour
 		}
 		Destroy(this.gameObject);
 	}
+
+//	public void OnPush()
+//	{
+//	}
+//
+//	public void OnStay()
+//	{
+//	}
+//
+//	public void OnRelease()
+//	{
+//		switch (pageAction)
+//		{
+//			case PageAction.NextPage:
+//				BookController.Instance.NextPage();
+//				break;
+//			case PageAction.PrevPage:
+//				BookController.Instance.PrevPage();
+//				break;
+//			case PageAction.Nothing:
+//				break;
+//		}
+//	}
 }
