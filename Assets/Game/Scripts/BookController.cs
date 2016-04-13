@@ -15,6 +15,9 @@ public class BookController : BaseSingleton<BookController>
 
 	int sliderValue = 0;
 
+	int activePagesCount = 0;
+	int currentPage = 0;
+
 	public System.Action onFinishFlip;
 
 	public TextMaster textMaster
@@ -37,26 +40,38 @@ public class BookController : BaseSingleton<BookController>
 
 	public void SetPage(int pageNumber)
 	{
+		currentPage = 0;
+		activePagesCount = textMaster.GetTextPart(pageNumber).pages.Count;
 		pageReplacer.ReplacePage(pageNumber);
 	}
 
 	public void GoToPage(int pageNumber)
 	{
-		Debug.Log("pageNumber " + pageNumber.ToString());
+//		Debug.Log("pageNumber " + pageNumber.ToString());
 //		book.onFinishFlip += OnFinishFlip;
 		book.SetPage(pageNumber, false);
+
+
 
 		StartCoroutine(MyInvoke(onFinishFlip, 1.0f));
 	}
 
 	public void NextPage()
 	{
-		book.NextPage();
+		if (currentPage + 1 < activePagesCount - 1)
+		{
+			currentPage++;
+			book.NextPage();
+		}
 	}
 
 	public void PrevPage()
 	{
-		book.PrevPage();
+		if (currentPage - 1 >= 0)
+		{
+			currentPage--;
+			book.PrevPage();
+		}
 	}
 
 
