@@ -6,6 +6,7 @@ public class PageReplacer : MonoBehaviour
 {
 	[SerializeField] MegaBookBuilder book;
 	[SerializeField] MBComplexPage pageBuilder;
+	[SerializeField] InteractivePage emptyPage;
 //	[SerializeField] BookController bookController;
 
 
@@ -58,17 +59,24 @@ public class PageReplacer : MonoBehaviour
 		}
 
 		List<InteractivePage> createdPages = new List<InteractivePage>();
+
+		//Attach empty page
+		InteractivePage iPage = GameObject.Instantiate<InteractivePage>(BookController.Instance.textMaster.emptyPage);
+		createdPages.Add(iPage);
+
+		pageBuilder.pages.Add(iPage.gameObject);
+
 		//Create and assign new pages
 		foreach (InteractivePage page in textPart.pages)
 		{
-			InteractivePage iPage = GameObject.Instantiate<InteractivePage>(page);
+			iPage = GameObject.Instantiate<InteractivePage>(page);
 			createdPages.Add(iPage);
 
 			pageBuilder.pages.Add(iPage.gameObject);
 		}
 
 
-		Debug.Log(pageNumber.ToString());
+//		Debug.Log(pageNumber.ToString());
 
 		currentPageNumbers = new List<int>();
 
@@ -98,7 +106,7 @@ public class PageReplacer : MonoBehaviour
 			{
 				//				int pageparamsNumber = i;
 				int pageparamsNumber = i / 2;
-				Debug.Log("page number = " + pageparamsNumber.ToString());
+//				Debug.Log("page number = " + pageparamsNumber.ToString());
 
 
 				foreach (AttachedObject attachment in attachments)
@@ -117,11 +125,18 @@ public class PageReplacer : MonoBehaviour
 
 		}
 
+//		book.AttachDynamicObjectToPage(book.pages[0], 0);
+//		currentPageNumbers.Add(pageNumber);
+
 		for (int i = 0; i < pageBuilder.pages.Count; i++)
 		{
 			book.AttachDynamicObjectToPage(book.pages[pageNumber + i], i);
 			currentPageNumbers.Add(pageNumber + i);
 		}
+
+		BookController.Instance.GoToPage(pageNumber+1);
+//		BookController.Instance.GoToPage(GetPageNumber(pageNumber));
+
 	}
 
 	void DeleteOldText()
@@ -137,13 +152,23 @@ public class PageReplacer : MonoBehaviour
 	{
 		DeleteOldText();
 		CreateNewText(GetPageNumber(number), number);
-		BookController.Instance.GoToPage(GetPageNumber(number));
+//		BookController.Instance.GoToPage(GetPageNumber(number));
 	}
 
 
 	int GetPageNumber(int textNumber)
 	{
-		return Mathf.RoundToInt(textNumber * scaler);
+//		Debug.Log(textNumber);
+		int number = Mathf.RoundToInt(textNumber * scaler);
+//		if (number != 0)
+//		{
+//			if (number % 2 != 0)
+//			{
+////				number++;
+//			}
+//		}
+//		number += 4;
+		return number;
 	}
 
 //	void OnGUI()

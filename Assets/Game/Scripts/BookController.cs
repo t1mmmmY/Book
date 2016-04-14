@@ -1,4 +1,4 @@
-﻿//#define BOOK_DEBUG
+﻿#define BOOK_DEBUG
 
 using UnityEngine;
 using System.Collections;
@@ -30,7 +30,7 @@ public class BookController : BaseSingleton<BookController>
 		sliderValue = (int)book.page;
 		pageCount = book.NumPages;
 
-		StartGame();
+//		StartGame();
 	}
 
 	void StartGame()
@@ -47,7 +47,7 @@ public class BookController : BaseSingleton<BookController>
 
 	public void GoToPage(int pageNumber)
 	{
-//		Debug.Log("pageNumber " + pageNumber.ToString());
+		Debug.Log("pageNumber " + pageNumber.ToString());
 //		book.onFinishFlip += OnFinishFlip;
 		book.SetPage(pageNumber, false);
 
@@ -90,30 +90,34 @@ public class BookController : BaseSingleton<BookController>
 
 	void OnGUI()
 	{
-		GUILayout.Space(100);
-
-		GUILayout.BeginHorizontal();
+		if (GUILayout.Button("Start Game"))
 		{
-			sliderValue = Mathf.RoundToInt(GUILayout.HorizontalSlider(sliderValue, -1, pageCount + 1, GUILayout.Width(Screen.width / 3)));
-			GUILayout.Label(sliderValue.ToString());
-
-			if (GUILayout.Button("Apply"))
-			{
-				GoToPage(sliderValue);
-			}
-
-		} GUILayout.EndHorizontal();
-
-		if (GUILayout.Button("Left"))
-		{
-			PrevPage();
-			sliderValue = (int)book.page;
+			StartGame();
 		}
-		if (GUILayout.Button("Right"))
-		{
-			NextPage();
-			sliderValue = (int)book.page;
-		}
+//		GUILayout.Space(100);
+//
+//		GUILayout.BeginHorizontal();
+//		{
+//			sliderValue = Mathf.RoundToInt(GUILayout.HorizontalSlider(sliderValue, -1, pageCount + 1, GUILayout.Width(Screen.width / 3)));
+//			GUILayout.Label(sliderValue.ToString());
+//
+//			if (GUILayout.Button("Apply"))
+//			{
+//				GoToPage(sliderValue);
+//			}
+//
+//		} GUILayout.EndHorizontal();
+//
+//		if (GUILayout.Button("Left"))
+//		{
+//			PrevPage();
+//			sliderValue = (int)book.page;
+//		}
+//		if (GUILayout.Button("Right"))
+//		{
+//			NextPage();
+//			sliderValue = (int)book.page;
+//		}
 	}
 
 #endif

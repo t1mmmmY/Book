@@ -16,6 +16,7 @@ public class PageFlip : MonoBehaviour, InteractiveObject
 
 	public void OnRelease()
 	{
+		Debug.Log("Click");
 		switch (pageAction)
 		{
 			case PageAction.NextPage:

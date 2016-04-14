@@ -12,6 +12,7 @@ public class TextPart
 
 public class TextMaster : ScriptableObject 
 {
+	public InteractivePage emptyPage;
 	[SerializeField] TextPart[] textParts;
 
 	public int[] GetAllPageNumbers()
