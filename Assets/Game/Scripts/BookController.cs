@@ -58,7 +58,7 @@ public class BookController : BaseSingleton<BookController>
 
 	public void NextPage()
 	{
-		if (currentPage + 1 < activePagesCount - 1)
+//		if (currentPage + 1 < activePagesCount - 1)
 		{
 			currentPage++;
 			book.NextPage();
@@ -67,7 +67,7 @@ public class BookController : BaseSingleton<BookController>
 
 	public void PrevPage()
 	{
-		if (currentPage - 1 >= 0)
+//		if (currentPage - 1 >= 0)
 		{
 			currentPage--;
 			book.PrevPage();
